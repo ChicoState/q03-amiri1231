@@ -33,19 +33,19 @@ TEST(GuesserTest, locksout) {
 }
 
 TEST(GuesserTest, Threeguesses) {
-    Guesser g("hello");
-    g.match("hella");
-    g.match("helly");
-    g.match("hellz");
-    ASSERT_FALSE(g.match("hello"));
+    Guesser g("abcde");
+    g.match("abcdz");
+    g.match("abcdy");
+    g.match("abcdx");
+    ASSERT_FALSE(g.match("abcde"));
     ASSERT_EQ(g.remaining(), 0);
 }
 
 TEST(GuesserTest, correct) {
-    Guesser g("hello");
-    g.match("hella");
+    Guesser g("abcde");
+    g.match("abcdz");
     ASSERT_EQ(g.remaining(), 2);
-    ASSERT_TRUE(g.match("hello"));  
+    ASSERT_TRUE(g.match("abcde"));  
 }
 
 
@@ -102,3 +102,23 @@ TEST(GuesserTest, mixcase) {
     ASSERT_EQ(g.remaining(), 2);
 }
 
+TEST(GuesserTest, LowercaseAlphaNumeric) {
+    Guesser g("csci430");
+    ASSERT_TRUE(g.match("csci430"));
+    ASSERT_FALSE(g.match("csci431"));
+    ASSERT_EQ(g.remaining(), 2);
+}
+
+TEST(GuesserTest, MixedCaseUnderscore) {
+    Guesser g("CsCi_430");
+    ASSERT_TRUE(g.match("CsCi_430"));
+    ASSERT_FALSE(g.match("csci_430"));
+    ASSERT_EQ(g.remaining(), 2);
+}
+
+TEST(GuesserTest, SpecialCharAndLetters) {
+    Guesser g("Csc!_43O");
+    ASSERT_TRUE(g.match("Csc!_43O"));
+    ASSERT_FALSE(g.match("Csc!_430"));
+    ASSERT_EQ(g.remaining(), 2);
+}
